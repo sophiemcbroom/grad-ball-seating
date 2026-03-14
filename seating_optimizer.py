@@ -42,24 +42,24 @@ from copy import deepcopy
 # ── Column name configuration ──────────────────────────────────────────────────
 COLUMN_NAME        = "name"
 COLUMN_PLUS_ONE    = "plus one"
-COLUMN_PREFERENCES = "who to be seated with UP TO 6 "
+COLUMN_PREFERENCES = "who to be seated with UP TO 6"
 COLUMN_AVOIDANCES  = "who to not be seated with "
 
 # ── Scoring weights ────────────────────────────────────────────────────────────
-WEIGHT_MUTUAL     = 4       # Both listed each other
-WEIGHT_ONE_SIDED  = 1       # Only one listed the other
+WEIGHT_MUTUAL     = 10      # Both listed each other
+WEIGHT_ONE_SIDED  = 3       # Only one listed the other
 WEIGHT_PLUS_ONE   = 15      # Plus-one bond (very strong)
 PENALTY_AVOIDANCE = 100     # Hard penalty for avoidance violations
-CLUSTER_BONUS     = 2       # Extra bonus per edge in a 3+ clique at a table
+CLUSTER_BONUS     = 5       # Extra bonus per edge in a 3+ clique at a table
 
 # ── Annealing parameters ───────────────────────────────────────────────────────
-INITIAL_TEMP   = 800.0
-COOLING_RATE   = 0.99985    # Much slower cooling for better exploration
+INITIAL_TEMP   = 200.0      # Lower start — dataset is small (~100 people)
+COOLING_RATE   = 0.9997     # Faster cooling to match smaller search space
 MIN_TEMP       = 0.01
-ITERATIONS     = 1_500_000  # More iterations for 550 people
-REHEAT_INTERVAL = 150_000   # Reheat every N iterations if stuck
-REHEAT_TEMP     = 200.0     # Temperature to reheat to
-STALE_THRESHOLD = 50_000    # Iterations without improvement before reheat
+ITERATIONS     = 500_000    # Sufficient for ~100 people
+REHEAT_INTERVAL = 50_000    # Reheat every N iterations if stuck
+REHEAT_TEMP     = 80.0      # Temperature to reheat to
+STALE_THRESHOLD = 20_000    # Iterations without improvement before reheat
 
 
 def normalize_name(name):
@@ -103,6 +103,7 @@ def load_attendees(path):
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            row = {k.strip(): v for k, v in row.items()}
             name = normalize_name(row.get(COLUMN_NAME, ""))
             if not name:
                 continue

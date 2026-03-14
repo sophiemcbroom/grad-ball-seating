@@ -1,10 +1,10 @@
-Table 1: Brooklyn Waddell, Rhys Jones, Sanad Abu Baker
-Table 2: Amir Qashoua, Brooklyn Barootes, Ella Rikley, Evan Deng, Jacob Loder, Noah Miller, Saransh Padhy, Sia Bhimani, Tam Bui, Zoya Qadiri
-Table 3: Alicia Frajman, Anya Kasuri, Deren Jhou, Hannah Jin, Paul Durroux, Sophie Mcbroom, Spencer Jantzen, Thomas Musumeci
-Table 4: Ari Vogli
-Table 5: Angus Burke, Cole Gowdy, Elaine Xiao, Ines Wolff, John Miraglia, Levana Xu, Luca Shearer, Tiffany Jiang, Vivian Wright, Yougi Gherbi
-Table 6: Axelle Lamiere, Peter Pei, Rishi Kalaga
-Table 7: Aishu Rajan, Ella Bjork
-Table 8: Akassia Molina, Dylan Mcmillan, Gillian Vetters, Sasha Gorev
-Table 9: Mazen Asali, Michelle Lu, Pearce Tai Thomasson
-Table 10: Felix Asikainen
+Table 1: Akassia Molina, Alicia Frajman, Alvaro Beerto, Amelie Naslin, Aryan Hashemi, Camila Liberos, Gonzalo Millan, Paul Durroux, Pearce Tai Thomasson, Thomas Pasquier
+Table 2: Aditi Shringarpure, Rafi Smith, Selena Hussain, Wes Carty
+Table 3: Chloe Bhogal, Mitra Shoghli, Sasha Gorev
+Table 4: Asia Lucas, Carmen Spencer, Cole Gowdy, Deren Jhou, Emma Thauvin, Hannah Jin, Indie Jerry, Ines Boiridy-Graves, Kimsoo Gopnik, Levana Xu, Michael Parsons, Noah Miller
+Table 5: Frankie Paton, Gillian Vetters, India Bejaoui, Ines Wolff, Jenn Holland, John Miraglia, Maria Zen-Baxter, Nina Nikolaev, Thomas Musumeci, Tobias Beker-Flah
+Table 6: Aishu Rajan, Ben Weissman, Keith Baybayon, Luca Shearer, Roman Corsetti, Samantha Pierotti, Sarah Crawford, Sophie Nguyen, Teagan Hollenberg, Vivian Wright
+Table 7: Aaron Jain, Angus Burke, Emil Tobolka, Nick Cholmsky, Nick Harati, Peter Marchi, Rhys Jones, Rishi Kalaga, Yougi Gherbi
+Table 8: Anna Zaidi, Beliz Baloglu, Dylan Mcmillan, Elaine Xiao, Hadrien Padilla, Jackson Bluelinen, Juan Bernald, Katie Liakin, Katie Olsen, Liam Quigg, Max Deram, May Oconnell, Tam Bui, Victor Dekarli
+Table 9: Anna Jiang, Axelle Lamiere, Clem Arnou, Colton Tiede, Grace Fan, Hella Straub, Henry Caldicott, Lexa Maxwell, Lucas Allen, Michelle Lu, Rachel Leeminzinberg, Spencer Jantzen
+Table 10: Amir Qashoua, Anya Kasuri, Ari Vogli, Brooklyn Barootes, Brooklyn Waddell, Ella Rikley, Evan Deng, Ishita Kumar, Jacob Loder, Jaya Choudhry, Judy Zeng, Marisol Godbille, Mazen Asali, Peter Pei, Saransh Padhy, Sia Bhimani, Sofia Filippov, Sophie Mcbroom, Tiffany Jiang, Zoya Qadiri
