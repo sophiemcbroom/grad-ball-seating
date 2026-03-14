@@ -27,8 +27,8 @@ responses.csv expected columns (adjust COLUMN_* constants below if names differ)
   - Is there anyone you would prefer not to be seated with...
 
 Usage:
-  python seating_optimizer_v2.py --input responses.csv --tables tables.csv --output seating_chart.csv
-  python seating_optimizer_v2.py --input responses.csv --tables tables.csv --output seating_chart.csv --runs 5
+  python seating_optimizer.py --input responses.csv --tables tables.csv --output seating_chart.csv
+  python seating_optimizer.py --input responses.csv --tables tables.csv --output seating_chart.csv --runs 5
 """
 
 import csv
@@ -100,13 +100,24 @@ def load_attendees(path):
     plus_one_map = {}
     all_names    = set()
 
+    seen_names = set()
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
             name = normalize_name(row.get(COLUMN_NAME, ""))
             if not name:
                 continue
-            attendees.append(name)
+
+            if name in seen_names:
+                print(f"  Duplicate entry: '{name}' — keeping latest submission")
+                # Remove old entry data, keep the new one
+                raw_prefs.pop(name, None)
+                raw_avoids.pop(name, None)
+                plus_one_map.pop(name, None)
+            else:
+                attendees.append(name)
+                seen_names.add(name)
+
             all_names.add(name)
 
             prefs = [normalize_name(p) for p in parse_names(row.get(COLUMN_PREFERENCES, ""))]

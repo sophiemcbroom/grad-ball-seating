@@ -1,0 +1,46 @@
+Table Name,Capacity,Filled,Name,Preferences Fulfilled,Preferences Missed,Avoidance Violations,Plus-One Together?
+Table 1,10,3,Brooklyn Waddell,,,,
+Table 1,10,3,Rhys Jones,,,,
+Table 1,10,3,Sanad Abu Baker,,,,
+Table 2,10,10,Amir Qashoua,Ella Rikley,,,✓
+Table 2,10,10,Brooklyn Barootes,Jacob Loder,,,✓
+Table 2,10,10,Ella Rikley,Amir Qashoua,,,
+Table 2,10,10,Evan Deng,,,,
+Table 2,10,10,Jacob Loder,Brooklyn Barootes,,,
+Table 2,10,10,Noah Miller,,,,
+Table 2,10,10,Saransh Padhy,Zoya Qadiri,,,
+Table 2,10,10,Sia Bhimani,,,,
+Table 2,10,10,Tam Bui,,,,
+Table 2,10,10,Zoya Qadiri,Saransh Padhy,,,✓
+Table 3,8,8,Alicia Frajman,Paul Durroux,,,✓
+Table 3,8,8,Anya Kasuri,,,,
+Table 3,8,8,Deren Jhou,Hannah Jin,,,
+Table 3,8,8,Hannah Jin,Deren Jhou,,,✓
+Table 3,8,8,Paul Durroux,Alicia Frajman,,,✓
+Table 3,8,8,Sophie Mcbroom,Spencer Jantzen,,,✓
+Table 3,8,8,Spencer Jantzen,Sophie Mcbroom,,,✓
+Table 3,8,8,Thomas Musumeci,,,,
+Table 4,12,1,Ari Vogli,,,,
+Table 5,10,10,Angus Burke,,,,
+Table 5,10,10,Cole Gowdy,Levana Xu,,,✓
+Table 5,10,10,Elaine Xiao,,,,
+Table 5,10,10,Ines Wolff,John Miraglia,,,✓
+Table 5,10,10,John Miraglia,Ines Wolff,,,
+Table 5,10,10,Levana Xu,Cole Gowdy,,,✓
+Table 5,10,10,Luca Shearer,Vivian Wright,,,
+Table 5,10,10,Tiffany Jiang,,,,
+Table 5,10,10,Vivian Wright,Luca Shearer,,,✓
+Table 5,10,10,Yougi Gherbi,,,,
+Table 6,10,3,Axelle Lamiere,,,,
+Table 6,10,3,Peter Pei,,,,
+Table 6,10,3,Rishi Kalaga,,,,
+Table 7,9,2,Aishu Rajan,,,,
+Table 7,9,2,Ella Bjork,,,,
+Table 8,14,4,Akassia Molina,,,,
+Table 8,14,4,Dylan Mcmillan,,,,
+Table 8,14,4,Gillian Vetters,,,,
+Table 8,14,4,Sasha Gorev,,,,
+Table 9,12,3,Mazen Asali,,,,
+Table 9,12,3,Michelle Lu,,,,
+Table 9,12,3,Pearce Tai Thomasson,,,,
+Table 10,20,1,Felix Asikainen,,,,
