@@ -40,31 +40,47 @@ from collections import defaultdict
 from copy import deepcopy
 
 # ── Column name configuration ──────────────────────────────────────────────────
+# These are matched as case-insensitive prefixes against the actual CSV headers,
+# so they work even when Google Form question text is long or changes slightly.
 COLUMN_NAME        = "name"
-COLUMN_PLUS_ONE    = "plus one"
-COLUMN_PREFERENCES = "who to be seated with UP TO 6"
-COLUMN_AVOIDANCES  = "who to not be seated with "
+COLUMN_PLUS_ONE    = "do you have a plus one"
+COLUMN_PREFERENCES = "who would you like to be seated with"
+COLUMN_AVOIDANCES  = "is there anyone you would prefer not to be seated with"
 
 # ── Scoring weights ────────────────────────────────────────────────────────────
 WEIGHT_MUTUAL     = 10      # Both listed each other
 WEIGHT_ONE_SIDED  = 3       # Only one listed the other
-WEIGHT_PLUS_ONE   = 15      # Plus-one bond (very strong)
+WEIGHT_PLUS_ONE   = 50      # Plus-one bond (very strong)
 PENALTY_AVOIDANCE = 100     # Hard penalty for avoidance violations
 CLUSTER_BONUS     = 5       # Extra bonus per edge in a 3+ clique at a table
 
 # ── Annealing parameters ───────────────────────────────────────────────────────
-INITIAL_TEMP   = 200.0      # Lower start — dataset is small (~100 people)
-COOLING_RATE   = 0.9997     # Faster cooling to match smaller search space
-MIN_TEMP       = 0.01
-ITERATIONS     = 500_000    # Sufficient for ~100 people
-REHEAT_INTERVAL = 50_000    # Reheat every N iterations if stuck
-REHEAT_TEMP     = 80.0      # Temperature to reheat to
-STALE_THRESHOLD = 20_000    # Iterations without improvement before reheat
+INITIAL_TEMP    = 600.0     # High enough to escape local optima for 550 people
+COOLING_RATE    = 0.999920  # Very slow cooling for thorough exploration
+MIN_TEMP        = 0.001
+ITERATIONS      = 3_000_000 # High iteration count for best quality
+REHEAT_INTERVAL = 200_000   # Reheat every N iterations if stuck
+REHEAT_TEMP     = 250.0     # Temperature to reheat to
+STALE_THRESHOLD = 60_000    # Iterations without improvement before reheat
 
 
 def normalize_name(name):
     """Normalize to title case so Alice Smith, alice smith, ALICE SMITH all match."""
     return name.strip().title()
+
+
+def normalize_key(k):
+    """Normalize a CSV column header: lowercase, collapse whitespace/newlines."""
+    return " ".join(k.lower().split())
+
+
+def get_col(row, prefix):
+    """Get a value from a row by matching the column whose normalized key starts with prefix."""
+    prefix_norm = normalize_key(prefix)
+    for k, v in row.items():
+        if normalize_key(k).startswith(prefix_norm):
+            return v
+    return ""
 
 
 def parse_names(raw):
@@ -103,22 +119,21 @@ def load_attendees(path):
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            row = {k.strip(): v for k, v in row.items()}
-            name = normalize_name(row.get(COLUMN_NAME, ""))
+            name = normalize_name(get_col(row, COLUMN_NAME))
             if not name:
                 continue
             attendees.append(name)
             all_names.add(name)
 
-            prefs = [normalize_name(p) for p in parse_names(row.get(COLUMN_PREFERENCES, ""))]
+            prefs = [normalize_name(p) for p in parse_names(get_col(row, COLUMN_PREFERENCES))]
             raw_prefs[name] = prefs
             all_names.update(prefs)
 
-            avoids = [normalize_name(a) for a in parse_names(row.get(COLUMN_AVOIDANCES, ""))]
+            avoids = [normalize_name(a) for a in parse_names(get_col(row, COLUMN_AVOIDANCES))]
             raw_avoids[name] = avoids
             all_names.update(avoids)
 
-            plus_one = normalize_name(row.get(COLUMN_PLUS_ONE, ""))
+            plus_one = normalize_name(get_col(row, COLUMN_PLUS_ONE))
             if plus_one:
                 plus_one_map[name] = plus_one
                 all_names.add(plus_one)
@@ -671,6 +686,57 @@ def run_annealing(attendees, pref_weights, avoidance_pairs, plus_one_map, adjace
     return best_tables, best_score
 
 
+def fix_plus_ones(tables_people, tables_meta, plus_one_map):
+    """
+    Post-processing pass: forcibly seat separated plus-one pairs together.
+    For each separated pair, moves the plus-one to their partner's table,
+    swapping out a non-plus-one person if the table is full.
+    """
+    capacities = [t["capacity"] for t in tables_meta]
+    person_table = {p: t for t, table in enumerate(tables_people) for p in table}
+
+    fixed = 0
+    for person, plus_one in plus_one_map.items():
+        if person not in person_table or plus_one not in person_table:
+            continue
+        t_person = person_table[person]
+        t_plus   = person_table[plus_one]
+        if t_person == t_plus:
+            continue  # already together
+
+        # Move plus_one to person's table
+        t_dest = t_person
+        tables_people[t_plus].remove(plus_one)
+
+        if len(tables_people[t_dest]) < capacities[t_dest]:
+            # Room available — just move
+            tables_people[t_dest].append(plus_one)
+        else:
+            # Table full — swap plus_one with someone at dest who isn't a plus-one pair member
+            swap_candidates = [
+                p for p in tables_people[t_dest]
+                if p != person
+                and plus_one_map.get(p) not in tables_people[t_dest]
+                and p not in plus_one_map.values()
+            ]
+            if swap_candidates:
+                swap_person = swap_candidates[0]
+                tables_people[t_dest].remove(swap_person)
+                tables_people[t_dest].append(plus_one)
+                tables_people[t_plus].append(swap_person)
+                person_table[swap_person] = t_plus
+            else:
+                # Fallback: overflow — just append anyway
+                tables_people[t_dest].append(plus_one)
+
+        person_table[plus_one] = t_dest
+        fixed += 1
+
+    if fixed:
+        print(f"  Post-processing: fixed {fixed} separated plus-one pair(s).")
+    return tables_people
+
+
 def write_simple_output(path, tables_people, tables_meta):
     """Write a plain text file listing each table and its occupants."""
     with open(path, "w", encoding="utf-8") as f:
@@ -803,6 +869,7 @@ def main():
             best_tables = tables_people
 
     print(f"\nBest score across all runs: {best_score:.1f}")
+    best_tables = fix_plus_ones(best_tables, tables_meta, plus_one_map)
     write_output(args.output, best_tables, tables_meta, pref_weights, avoidance_pairs, plus_one_map)
     if args.simple_output:
         write_simple_output(args.simple_output, best_tables, tables_meta)
